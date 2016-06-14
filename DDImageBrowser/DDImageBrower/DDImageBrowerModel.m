@@ -7,7 +7,8 @@
 //
 
 #import "DDImageBrowerModel.h"
-
+CGFloat const cellMargin = 15;
+NSString *const DDDismissNotification = @"DDDismissNotification";
 @implementation DDImageBrowerModel
 
 @end

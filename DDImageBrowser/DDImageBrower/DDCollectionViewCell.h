@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DDImageScrollView.h"
+@class DDImageBrowerModel;
 @interface DDCollectionViewCell : UICollectionViewCell
-@property (nonatomic, strong) DDImageScrollView *imageScrollview;
+@property (nonatomic, strong) DDImageBrowerModel *imageBrowerModel;
 @end

@@ -7,7 +7,26 @@
 //
 
 #import "DDCollectionViewCell.h"
+#import "DDImageBrowerModel.h"
+@interface DDCollectionViewCell ()
 
+@property (nonatomic, strong) DDImageScrollView *imageScrollview;
+
+@end
 @implementation DDCollectionViewCell
 
+-(void)setImageBrowerModel:(DDImageBrowerModel *)imageBrowerModel{
+    _imageBrowerModel = imageBrowerModel;
+    self.imageScrollview.imageModel = imageBrowerModel;
+    
+    
+}
+
+-(DDImageScrollView *)imageScrollview{
+    if (!_imageScrollview) {
+        _imageScrollview = [[DDImageScrollView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width,[UIScreen mainScreen].bounds.size.height)];
+        [self.contentView addSubview:_imageScrollview];
+    }
+    return _imageScrollview;
+}
 @end

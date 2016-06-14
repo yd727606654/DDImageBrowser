@@ -7,7 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "DDImageBrowerModel.h"
 @interface DDImageScrollView : UIScrollView
+
+@property (nonatomic, strong) DDImageBrowerModel *imageModel;
 
 @end

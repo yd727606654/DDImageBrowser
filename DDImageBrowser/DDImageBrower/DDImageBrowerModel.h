@@ -8,10 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+extern CGFloat const cellMargin;
+extern NSString * const DDDismissNotification;
 @interface DDImageBrowerModel : NSObject
 
-@property (nonatomic, strong) UIImage *thumImage;
 @property (nonatomic, strong) UIImageView *thumImageView;
-@property (nonatomic, copy) NSString *oriURL;
+@property (nonatomic, strong) UIImage *oriImage;
+@property (nonatomic, copy) NSString *oriUrl;
 
 @end
