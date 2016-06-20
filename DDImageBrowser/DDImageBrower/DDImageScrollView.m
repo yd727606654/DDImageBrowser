@@ -47,38 +47,51 @@
 
 -(void)setImageModel:(DDImageBrowerModel *)imageModel{
     
-    SDWebImageManager *manager = [SDWebImageManager sharedManager];
-    // no cache
-    if (![manager cachedImageExistsForURL:[NSURL URLWithString:imageModel.oriUrl]] && ![manager diskImageExistsForURL:[NSURL URLWithString:imageModel.oriUrl]]) {
-        CGSize size = imageModel.thumImageView.image.size;
-        _imageView.frame = CGRectMake((self.bounds.size.width - size.width)/2,
-                                      (self.bounds.size.height - size.height)/2,
-                                      size.width,
-                                      size.height);
-        [_imageView setIndicatorStyle:UIActivityIndicatorViewStyleGray];
+    if (imageModel.oriImage) {
+        _imageView.image = imageModel.oriImage;
+        CGRect imageViewFrame = [imageModel.oriImage dd_centerScreenFrame];
+        _imageView.frame = imageViewFrame;
+        self.contentSize = _imageView.bounds.size;
+        return;
     }
     
-    [_imageView sd_setImageWithURL:[NSURL URLWithString:imageModel.oriUrl] placeholderImage:imageModel.thumImageView.image options:SDWebImageRefreshCached progress:^(NSInteger receivedSize, NSInteger expectedSize) {
+    SDWebImageManager *manager = [SDWebImageManager sharedManager];
+    // no cache
+    _imageView.frame = CGRectZero;
+    
+    UIImage *placeholderImage = imageModel.thumImageView ? imageModel.thumImageView.image : [UIImage imageNamed:@"empty_image"];
+    if (![manager cachedImageExistsForURL:[NSURL URLWithString:imageModel.oriUrl]] && ![manager diskImageExistsForURL:[NSURL URLWithString:imageModel.oriUrl]]) {
+
+            CGSize size = placeholderImage.size;
+            _imageView.frame = CGRectMake((self.bounds.size.width - size.width)/2,
+                                          (self.bounds.size.height - size.height)/2,
+                                          size.width,
+                                          size.height);
+//            _imageView.image = placeholderImage;
+
+    }
+    
+    [_imageView sd_setImageWithURL:[NSURL URLWithString:imageModel.oriUrl] placeholderImage:placeholderImage options:SDWebImageRetryFailed progress:^(NSInteger receivedSize, NSInteger expectedSize) {
         
     } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-        imageModel.oriImage = image;
-        if (cacheType == SDImageCacheTypeNone) {
-            [UIView animateWithDuration:.3f animations:^{
+        
+        if (image) {
+            imageModel.oriImage = image;
+            if (cacheType == SDImageCacheTypeNone) {
+                [UIView animateWithDuration:.3f animations:^{
+                    CGRect imageViewFrame = [image dd_centerScreenFrame];
+                    _imageView.frame = imageViewFrame;
+                } completion:^(BOOL finished) {
+                    
+                }];
+                
+            }else{
                 CGRect imageViewFrame = [image dd_centerScreenFrame];
                 _imageView.frame = imageViewFrame;
-                self.contentSize = _imageView.bounds.size;
-                
-            } completion:^(BOOL finished) {
-                
-            }];
-            
-        }else{
-          CGRect imageViewFrame = [image dd_centerScreenFrame];
-            
-            _imageView.frame = imageViewFrame;
-            self.contentSize = _imageView.bounds.size;
+            }
         }
         
+       self.contentSize = _imageView.bounds.size;
     }];
     
 }

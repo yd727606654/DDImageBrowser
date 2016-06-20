@@ -14,7 +14,7 @@
 @implementation DDDismissAnimation
 
 -(NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext{
-    return .3f;
+    return 0.3f;
 }
 
 -(void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext{
@@ -23,7 +23,8 @@
     UIViewController *toVC = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
     CGRect initialFrame = [transitionContext initialFrameForViewController:fromVC];
     DDImageBrowerModel *imageModel = fromVC.imageBrowerModels[fromVC.currentIndex];
-    UIView *selectView = [imageModel thumImageView];
+   
+    
     
     UIView *containerView = [transitionContext containerView];
     [containerView.superview bringSubviewToFront:containerView];
@@ -33,14 +34,30 @@
     backView.backgroundColor = [UIColor blackColor];
     [containerView addSubview:backView];
     
+
+    UIImage *placeholderImage = imageModel.thumImageView ? imageModel.thumImageView.image : [UIImage imageNamed:@"empty_image"];
     UIImageView *imagev = [[UIImageView alloc] init];
     CGRect imageViewF;
     if (imageModel.oriImage) {
         imageViewF = [imageModel.oriImage dd_centerScreenFrame];
         imagev.image = imageModel.oriImage;
     }else{
-        //TODO:
+        
+        CGSize size = placeholderImage.size;
+        imageViewF = CGRectMake((backView.bounds.size.width - size.width)/2,
+                                (backView.bounds.size.height - size.height)/2,
+                                size.width,
+                                size.height);
+        imagev.image = placeholderImage;
     }
+    
+    
+    CGRect imageEndFrame;
+    if (imageModel.thumImageView) {
+        UIView *selectView = [imageModel thumImageView];
+        imageEndFrame = [containerView convertRect:selectView.bounds fromView:selectView];
+    }
+    
     imagev.clipsToBounds = YES;
     imagev.contentMode = UIViewContentModeScaleAspectFill;
     [containerView addSubview:imagev];
@@ -49,10 +66,15 @@
     imagev.frame = imageViewF;
     
     NSTimeInterval duration = [self transitionDuration:transitionContext];
-    CGRect imageEndFrame = [containerView convertRect:selectView.bounds fromView:selectView];
+   
     [UIView animateWithDuration:duration animations:^{
-        imagev.frame = imageEndFrame;
+        
         backView.alpha = 0;
+        if (imageModel.thumImageView){
+            imagev.frame = imageEndFrame;
+        }else{
+          imagev.alpha = 0;
+        }
     } completion:^(BOOL finished) {
         [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
     }];

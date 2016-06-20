@@ -73,7 +73,9 @@ NSString *image3 = @"http://7xk9ph.com1.z0.glb.clouddn.com/83319791-D820-4CDF-B9
         
         [vc.imageBrowerModels addObject:browerModel];
     }
-    
+    DDImageBrowerModel *browerModel = [[DDImageBrowerModel alloc] init];
+    browerModel.oriUrl = @"http://7xmdkk.com1.z0.glb.clouddn.com/252C997E-F7E8-40F1-8376-A30230AF36C0";
+    [vc.imageBrowerModels addObject:browerModel];
     [self presentViewController:vc animated:YES completion:nil];
     
 }

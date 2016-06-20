@@ -15,7 +15,7 @@
 
 
 -(NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext{
-    return .3f;
+    return 0.3f;
 }
 
 -(void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext{
@@ -42,8 +42,8 @@
     // no cache
     
     if (![manager cachedImageExistsForURL:[NSURL URLWithString:imageModel.oriUrl]] && ![manager diskImageExistsForURL:[NSURL URLWithString:imageModel.oriUrl]]) {
-        imagev.image = selectView.image;
-        imagev.frame = imageFrame;
+//        imagev.image = selectView.image;
+//        imagev.frame = imageFrame;
         [transitionContext completeTransition:YES];
         [backView removeFromSuperview];
         [imagev removeFromSuperview];
@@ -55,8 +55,8 @@
         } completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
             if (!image) {
                 //TODO:
-                imagev.image = selectView.image;
-                imagev.frame = imageFrame;
+//                imagev.image = selectView.image;
+//                imagev.frame = imageFrame;
                 [transitionContext completeTransition:YES];
                 [backView removeFromSuperview];
                 [imagev removeFromSuperview];
